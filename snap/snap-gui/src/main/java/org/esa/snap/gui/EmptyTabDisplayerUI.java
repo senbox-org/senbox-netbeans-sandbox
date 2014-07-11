@@ -5,30 +5,31 @@
  */
 package org.esa.snap.gui;
 
-import java.awt.Dimension;
-import java.awt.Point;
-import java.awt.Polygon;
-import java.awt.Rectangle;
+import org.netbeans.swing.tabcontrol.TabDisplayer;
+import org.netbeans.swing.tabcontrol.TabDisplayerUI;
+
 import javax.swing.DefaultSingleSelectionModel;
 import javax.swing.JComponent;
 import javax.swing.SingleSelectionModel;
 import javax.swing.plaf.ComponentUI;
-import org.netbeans.swing.tabcontrol.TabDisplayer;
-import org.netbeans.swing.tabcontrol.TabDisplayerUI;
+import java.awt.Dimension;
+import java.awt.Point;
+import java.awt.Polygon;
+import java.awt.Rectangle;
 
 /**
  *
  * @author Norman
  */
-public class SnapTabDisplayerUI extends TabDisplayerUI {
+public class EmptyTabDisplayerUI extends TabDisplayerUI {
 
-    public SnapTabDisplayerUI(TabDisplayer displayer) {
+    public EmptyTabDisplayerUI(TabDisplayer displayer) {
         super(displayer);
     }
 
     public static ComponentUI createUI(JComponent jc) {
         assert jc instanceof TabDisplayer;
-        return new SnapTabDisplayerUI((TabDisplayer) jc);
+        return new EmptyTabDisplayerUI((TabDisplayer) jc);
     }
 
     private static final int[] PTS = new int[]{0, 0, 0};

@@ -5,29 +5,35 @@
  */
 package org.esa.snap.gui;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.Rectangle;
-import java.beans.PropertyVetoException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import org.netbeans.swing.tabcontrol.DefaultTabDataModel;
+import org.netbeans.swing.tabcontrol.TabData;
+import org.netbeans.swing.tabcontrol.TabDisplayer;
+import org.netbeans.swing.tabcontrol.TabbedContainer;
+import org.netbeans.swing.tabcontrol.WinsysInfoForTabbedContainer;
+import org.openide.awt.ActionID;
+import org.openide.awt.ActionReference;
+import org.openide.util.NbBundle.Messages;
+import org.openide.windows.TopComponent;
+
 import javax.swing.JComponent;
 import javax.swing.JDesktopPane;
 import javax.swing.JInternalFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SingleSelectionModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.InternalFrameEvent;
 import javax.swing.event.InternalFrameListener;
-import org.netbeans.swing.tabcontrol.TabData;
-import org.netbeans.swing.tabcontrol.TabbedContainer;
-import org.openide.awt.ActionID;
-import org.openide.awt.ActionReference;
-import org.openide.util.NbBundle.Messages;
-import org.openide.windows.TopComponent;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.beans.PropertyVetoException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Norman
@@ -65,7 +71,6 @@ public class WorkspaceTopComponent extends TopComponent implements InternalFrame
         setToolTipText(Bundle.HINT_WorkspaceTopComponent());
         frameToTabMap = new HashMap<>();
         tabToFrameMap = new HashMap<>();
-
         instance = this;
     }
 
@@ -75,9 +80,25 @@ public class WorkspaceTopComponent extends TopComponent implements InternalFrame
 
     private void initComponents() {
         setLayout(new BorderLayout());
-        tabbedContainer = new TabbedContainer(TabbedContainer.TYPE_EDITOR);
+
+        String tabbedContainerUiClassId = TabbedContainer.TABBED_CONTAINER_UI_CLASS_ID;
+        System.out.println("tabbedContainerUiClassId = " + tabbedContainerUiClassId);
+
+        DefaultTabDataModel tabDataModel = new DefaultTabDataModel();
+        tabbedContainer = new TabbedContainer(tabDataModel, TabbedContainer.TYPE_EDITOR, WinsysInfoForTabbedContainer.getDefault(new WinsysInfoForTabbedContainer() {
+            @Override
+            public Object getOrientation(Component comp) {
+                return TabDisplayer.ORIENTATION_CENTER;
+            }
+
+            @Override
+            public boolean inMaximizedMode(Component comp) {
+                JInternalFrame selectedFrame = desktopPane.getSelectedFrame();
+                return selectedFrame != null && selectedFrame.isMaximum();
+            }
+        }));
         desktopPane = new JDesktopPane();
-        
+
         TabData tabData = new TabData(new JPanel(), null, "Dummy Tab", "Dummy Tab");
         tabbedContainer.getModel().addTab(0, tabData);
 
@@ -85,6 +106,28 @@ public class WorkspaceTopComponent extends TopComponent implements InternalFrame
         add(desktopPane, BorderLayout.CENTER);
 
         tabbedContainer.getSelectionModel().addChangeListener(this);
+
+        tabbedContainer.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("actionPerformed: e = " + e);
+                if ("maximize".equalsIgnoreCase(e.getActionCommand())) {
+                    JInternalFrame selectedFrame = desktopPane.getSelectedFrame();
+                    if (selectedFrame != null) {
+                        try {
+                            selectedFrame.setMaximum(!selectedFrame.isMaximum());
+                        } catch (PropertyVetoException e1) {
+                            // ok
+                        }
+                    }
+                } else if ("close".equalsIgnoreCase(e.getActionCommand())) {
+                    JInternalFrame selectedFrame = desktopPane.getSelectedFrame();
+                    if (selectedFrame != null) {
+                        removeWindow(selectedFrame);
+                    }
+                }
+            }
+        });
     }
 
     public void addComponent(String title, JComponent component) {
@@ -107,7 +150,7 @@ public class WorkspaceTopComponent extends TopComponent implements InternalFrame
         };
                 */
         JComponent tabComponent = new JPanel();
-        tabComponent.setPreferredSize(new Dimension(0,0));
+        tabComponent.setPreferredSize(new Dimension(0, 0));
         //JComponent tabComponent = new JLabel("Tab + " + index);
         TabData tabData = new TabData(tabComponent, null, title, "Tab + " + index);
         tabbedContainer.getModel().addTab(tabbedContainer.getModel().size(), tabData);
@@ -129,9 +172,24 @@ public class WorkspaceTopComponent extends TopComponent implements InternalFrame
         }
     }
 
+    private void removeWindow(JInternalFrame selectedFrame) {
+        selectedFrame.removeInternalFrameListener(this);
+        TabData tabData = frameToTabMap.get(selectedFrame);
+        if (tabData != null) {
+            int tabIndex = tabbedContainer.getModel().indexOf(tabData);
+            if (tabIndex >= 0) {
+                tabbedContainer.getModel().removeTab(tabIndex);
+            }
+            tabToFrameMap.remove(tabData);
+        }
+        frameToTabMap.remove(selectedFrame);
+        desktopPane.remove(selectedFrame);
+        selectedFrame.dispose();
+    }
+
     @Override
     public void stateChanged(ChangeEvent e) {
-        /*
+
         SingleSelectionModel selectionModel = tabbedContainer.getSelectionModel();
         if (e.getSource() == selectionModel) {
             int selectedIndex = selectionModel.getSelectedIndex();
@@ -146,7 +204,7 @@ public class WorkspaceTopComponent extends TopComponent implements InternalFrame
                 }
             }
         }
-        */
+
     }
 
     @Override
@@ -160,7 +218,10 @@ public class WorkspaceTopComponent extends TopComponent implements InternalFrame
 
     @Override
     public void internalFrameClosed(InternalFrameEvent e) {
-        e.getInternalFrame().removeInternalFrameListener(this);
+        JInternalFrame selectedFrame = e.getInternalFrame();
+        if (selectedFrame != null) {
+            removeWindow(selectedFrame);
+        }
     }
 
     @Override
@@ -175,7 +236,7 @@ public class WorkspaceTopComponent extends TopComponent implements InternalFrame
 
     @Override
     public void internalFrameActivated(InternalFrameEvent e) {
-        /*
+
         JInternalFrame internalFrame = e.getInternalFrame();
         TabData selectedTab = frameToTabMap.get(internalFrame);
 
@@ -187,7 +248,7 @@ public class WorkspaceTopComponent extends TopComponent implements InternalFrame
                 break;
             }
         }
-                */
+
     }
 
     @Override

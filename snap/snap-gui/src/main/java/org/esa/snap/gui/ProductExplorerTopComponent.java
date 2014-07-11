@@ -5,15 +5,6 @@
  */
 package org.esa.snap.gui;
 
-import java.awt.BorderLayout;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import javax.swing.ActionMap;
-import javax.swing.text.DefaultEditorKit;
 import org.esa.snap.gui.nodes.ProductChildFactory;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
@@ -28,6 +19,16 @@ import org.openide.util.NbBundle.Messages;
 import org.openide.windows.IOProvider;
 import org.openide.windows.InputOutput;
 import org.openide.windows.TopComponent;
+
+import javax.swing.ActionMap;
+import javax.swing.text.DefaultEditorKit;
+import java.awt.BorderLayout;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 /**
  *
@@ -120,24 +121,24 @@ public class ProductExplorerTopComponent extends TopComponent implements Explore
 
     @Override
     public void componentOpened() {
-        // TODO add custom code on component opening       
+        //  add custom code on component opening
     }
 
     @Override
     public void componentClosed() {
-        // TODO add custom code on component closing
+        //  add custom code on component closing
     }
 
     void writeProperties(java.util.Properties p) {
         // better to version settings since initial version as advocated at
         // http://wiki.apidesign.org/wiki/PropertyFiles
         p.setProperty("version", "1.0");
-        // TODO store your settings
+        //  store your settings
     }
 
     void readProperties(java.util.Properties p) {
         String version = p.getProperty("version");
-        // TODO read your settings according to their version
+        //  read your settings according to their version
     }
 
 }
