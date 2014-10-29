@@ -10,6 +10,19 @@
 
     <name>Snap Parent</name>
 
+    <properties>
+        <netbeans.version>RELEASE801</netbeans.version>
+        <brandingToken>snap</brandingToken>
+    </properties>
+
+    <modules>
+        <module>snap-branding</module>
+        <module>snap-app</module>
+        <module>snap-core</module>
+        <module>snap-gui</module>
+        <module>snap-rgb-reader</module>
+    </modules>
+
     <repositories>
         <repository>
             <id>local</id>
@@ -35,7 +48,7 @@
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>nbm-maven-plugin</artifactId>
-                    <version>3.13</version>
+                    <version>3.14</version>
                     <extensions>true</extensions>
                     <configuration>
                         <brandingToken>${brandingToken}</brandingToken>
@@ -47,7 +60,7 @@
                     <!-- NetBeans 6.9+ requires JDK 6, starting NetBeans 7.4 source 1.7 is required -->
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
-                    <version>2.5.1</version>
+                    <version>3.1</version>
                     <configuration>
                         <source>1.7</source>
                         <target>1.7</target>
@@ -62,16 +75,4 @@
         </pluginManagement>
     </build>
 
-    <modules>
-        <module>snap-branding</module>
-        <module>snap-app</module>
-        <module>snap-core</module>
-        <module>snap-gui</module>
-        <module>snap-rgb-reader</module>
-    </modules>
-
-    <properties>
-        <netbeans.version>RELEASE80</netbeans.version>
-        <brandingToken>snap</brandingToken>
-    </properties>
 </project>
