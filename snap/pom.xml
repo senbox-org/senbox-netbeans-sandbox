@@ -24,12 +24,6 @@
     </modules>
 
     <repositories>
-        <repository>
-            <id>local</id>
-            <name>Local</name>
-            <url>file:////C:/Users/Norman/.m2/repository</url>
-        </repository>
-
         <!--
         Repository hosting NetBeans modules, especially APIs.
         Versions are based on IDE releases, e.g.: RELEASE691
@@ -54,6 +48,12 @@
                         <brandingToken>${brandingToken}</brandingToken>
                         <cluster>${brandingToken}</cluster>
                         <useOSGiDependencies>true</useOSGiDependencies>
+                        <additionalArguments>
+                            --locale en_GB --fontsize 13 -J-Xmx4G
+                        </additionalArguments>
+                        <debugAdditionalArguments>
+                            -J-Dnetbeans.patches.org.esa.snap.snap.core=../../../snap-core/target/classes -J-Dnetbeans.patches.org.esa.snap.snap.branding=../../../snap-branding/target/classes -J-Dnetbeans.patches.org.esa.snap.snap.gui=../../../snap-gui/target/classes -J-Dnetbeans.patches.org.esa.snap.snap.rgb.reader=../../../snap-rgb-reader/target/classes
+                        </debugAdditionalArguments>
                     </configuration>
                 </plugin>
                 <plugin>
