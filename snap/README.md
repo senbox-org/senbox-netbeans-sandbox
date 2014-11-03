@@ -71,3 +71,6 @@ NB Maven Plugin (nbm):
 Related NB configuration info:
 * https://platform.netbeans.org/articles/installation.html
 * http://netbeans.dzone.com/news/using-intellij-idea-netbeans, "4. Create a Runtime Configuration"
+* http://netbeans.dzone.com/using-maven-and-intellij-idea
+* http://sett.ociweb.com/sett/settSep2013.html
+* http://andrzejgrzesik.info/2012/09/18/debugging-netbeans-rcp-from-intellij/

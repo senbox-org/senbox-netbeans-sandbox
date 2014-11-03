@@ -1,4 +1,4 @@
 senbox-netbeans-sandbox
 =======================
 
-Sandbox for testing migration of BEAM to NetBeans Platform
+Sandbox supporting the migration of BEAM to the NetBeans Platform
