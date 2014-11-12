@@ -4,24 +4,35 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.esa.snap</groupId>
-    <artifactId>snap-parent</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <artifactId>snap-desktop</artifactId>
+    <version>2.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
-    <name>Snap Parent</name>
+    <name>SNAP Desktop Project</name>
+    <description>Desktop GUI for SNAP based on NetBeans Platform</description>
 
     <properties>
-        <netbeans.version>RELEASE801</netbeans.version>
         <brandingToken>snap</brandingToken>
+        <snap.version>${project.version}</snap.version>
+        <netbeans.version>RELEASE801</netbeans.version>
     </properties>
 
     <modules>
+        <module>snap-application</module>
         <module>snap-branding</module>
-        <module>snap-app</module>
-        <module>snap-core</module>
         <module>snap-gui</module>
-        <module>snap-rgb-reader</module>
+        <!-- dummies -->
+        <module>snap-dummy-api</module>
+        <module>snap-dummy-impl</module>
     </modules>
+
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.11</version>
+        </dependency>
+    </dependencies>
 
     <repositories>
         <!--
@@ -29,11 +40,26 @@
         Versions are based on IDE releases, e.g.: RELEASE691
         To create your own repository, use: nbm:populate-repository
         -->
+        <!--<repository>-->
+            <!--<id>netbeans</id>-->
+            <!--<name>NetBeans</name>-->
+            <!--<url>http://bits.netbeans.org/nexus/content/groups/netbeans/</url>-->
+        <!--</repository>-->
+
         <repository>
-            <id>netbeans</id>
-            <name>NetBeans</name>
-            <url>http://bits.netbeans.org/nexus/content/groups/netbeans/</url>
+            <id>snap-repo-public</id>
+            <name>Public Maven Repository for SNAP</name>
+            <url>http://nexus.senbox.net/nexus/content/repositories/public/</url>
+            <releases>
+                <enabled>true</enabled>
+                <checksumPolicy>warn</checksumPolicy>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+                <checksumPolicy>warn</checksumPolicy>
+            </snapshots>
         </repository>
+
     </repositories>
 
     <build>
@@ -47,20 +73,15 @@
                     <configuration>
                         <brandingToken>${brandingToken}</brandingToken>
                         <cluster>${brandingToken}</cluster>
-                        <useOSGiDependencies>true</useOSGiDependencies>
-                        <additionalArguments>
-                            --locale en_GB --fontsize 13 -J-Xmx4G
-                        </additionalArguments>
-                        <debugAdditionalArguments>
-                            -J-Dnetbeans.patches.org.esa.snap.snap.core=../../../snap-core/target/classes -J-Dnetbeans.patches.org.esa.snap.snap.branding=../../../snap-branding/target/classes -J-Dnetbeans.patches.org.esa.snap.snap.gui=../../../snap-gui/target/classes -J-Dnetbeans.patches.org.esa.snap.snap.rgb.reader=../../../snap-rgb-reader/target/classes
-                        </debugAdditionalArguments>
+                        <useOSGiDependencies>false</useOSGiDependencies>
+                        <additionalArguments>--locale en_GB -J-Xmx4G</additionalArguments>
                     </configuration>
                 </plugin>
                 <plugin>
                     <!-- NetBeans 6.9+ requires JDK 6, starting NetBeans 7.4 source 1.7 is required -->
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.1</version>
+                    <version>3.2</version>
                     <configuration>
                         <source>1.8</source>
                         <target>1.8</target>
@@ -69,7 +90,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-jar-plugin</artifactId>
-                    <version>2.4</version>
+                    <version>2.5</version>
                 </plugin>
             </plugins>
         </pluginManagement>
